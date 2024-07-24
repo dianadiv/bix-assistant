@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import ApolloProviderWrapper from "@/components/ApolloProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,11 +17,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ApolloProviderWrapper>
+      <ClerkProvider>
       <html lang="en">
         <body className="flex">{children}</body>
         {/* toaster */}
       </html>
     </ClerkProvider>
+    </ApolloProviderWrapper>
   );
 }
