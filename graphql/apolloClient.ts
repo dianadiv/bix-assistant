@@ -1,5 +1,4 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, createHttpLink, DefaultOptions } from '@apollo/client';
-import { create } from 'domain';
 
 export const BASE_URL =
   process.env.NODE_ENV !== 'development'

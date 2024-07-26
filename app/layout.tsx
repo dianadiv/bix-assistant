@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ApolloProviderWrapper from "@/components/ApolloProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
       <ClerkProvider>
       <html lang="en">
         <body className="flex">{children}</body>
-        {/* toaster */}
+        <Toaster position="bottom-right"/>
       </html>
     </ClerkProvider>
     </ApolloProviderWrapper>
