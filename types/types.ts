@@ -41,3 +41,11 @@ export interface Message {
 export interface GetChatbotByIdeResponse {
   chatbots: Chatbot;
 }
+
+export interface GetChatbotsByUserData {
+  chatbotsByUserId: Chatbot[];
+}
+
+export interface GetChatbotsByUserDataVariables {
+  clerk_user_id: string;
+}

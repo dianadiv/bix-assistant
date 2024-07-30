@@ -23,7 +23,7 @@ export default function SideBar() {
     <div className="bg-white text-white p-5">
       <ul className="gap-5 flex lg:flex-col">
         {link("/create-chat", "Create", "Chatbots", BotMessageSquare)}
-        {link("/view-chat", "Edit", "Chatbots", PencilLine)}
+        {link("/view-chatbots", "Edit", "Chatbots", PencilLine)}
         {link("/review-sessions", "View", "Sessions", SearchIcon)}
       </ul>
     </div>

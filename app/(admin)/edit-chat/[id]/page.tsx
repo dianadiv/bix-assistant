@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Characteristic from "@/components/ui/Characteristic";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/graphql/apolloClient";
-import { DELETE_CHATBOT } from "@/graphql/mutations/mutations";
+import { ADD_CHARACTERISTIC, DELETE_CHATBOT, UPDATE_CHATBOT } from "@/graphql/mutations/mutations";
 import { GET_CHATBOT_BY_ID } from "@/graphql/queries/queries";
 import { GetChatbotByIdeResponse } from "@/types/types";
 import { useMutation, useQuery } from "@apollo/client";
@@ -23,10 +23,16 @@ export default function EditChat({ params: { id } }: { params: { id: string } })
     refetchQueries: ['GetChatbotById'],
     awaitRefetchQueries: true,
   });
+  const [addCharacteristics] = useMutation(ADD_CHARACTERISTIC, {
+    refetchQueries: ['GetChatbotById'],
+  });
+  const [updateChatbot] = useMutation(UPDATE_CHATBOT, {
+    refetchQueries: ['GetChatbotById'],
+  });
   const { data, loading, error } = useQuery<GetChatbotByIdeResponse>(GET_CHATBOT_BY_ID, { variables: { id } });
 
   useEffect(() => {
-    data &&  setChatBotName(data.chatbots.name)
+    data && setChatBotName(data.chatbots.name)
   }, [data]);
 
   useEffect(() => {
@@ -34,8 +40,36 @@ export default function EditChat({ params: { id } }: { params: { id: string } })
   }, [id]);
 
   const handleUpdateChatBot = () => {
-
+    try {
+      const promise = updateChatbot({
+        variables: { id, name: chatBotName }
+      });
+      toast.promise(promise, {
+        loading: 'Updating...',
+        success: 'Updated!',
+        error: 'Error updating chatbot',
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const handleAddChars = async (event: any) => {
+    event.preventDefault();
+    try {
+      const promise = addCharacteristics({
+        variables: { chatbotId: Number(id), content: newChars }
+      });
+      toast.promise(promise, {
+        loading: 'Adding...',
+        success: 'Added!',
+        error: 'Error adding fact',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setNewChars('');
+  }
 
   const handleDeleteChatBot = async () => {
     try {
@@ -56,7 +90,7 @@ export default function EditChat({ params: { id } }: { params: { id: string } })
 
   return (
     <div className="px-0 md:p-0">
-      <div className="md:sticky md:top-0 z-50 ml-auto sm:max-w-sm space-y-2 md:border p-5 rounded-b-lg md:rounded-lg bg-[#2239c9]">
+      <div className="md:sticky md:top-0 z-50 ml-auto space-y-2 md:border mt-5 p-5 rounded-b-lg md:rounded-lg bg-[#2239c9]">
         <h2 className="text-white text-sm font-bold">Link to chat</h2>
         <p className="text-sm text-white">Share this link with customers to start conversation with chatbot</p>
         <div className="flex items-center space-x-2">
@@ -77,7 +111,7 @@ export default function EditChat({ params: { id } }: { params: { id: string } })
         </div>
       </div>
 
-      <section className="relative mt-5 bg-white md:p-10 rounded-lg">
+      <section className="relative mt-5 bg-white p-10 rounded-lg">
         <Button
           variant='destructive'
           className="absolute top-2 right-2 h-8 w-2"
@@ -103,10 +137,10 @@ export default function EditChat({ params: { id } }: { params: { id: string } })
         </div>
         <h2 className="text-sl font-bold mt-10">Here is what your AI Knows:</h2>
         <div>
-          <form onSubmit={() => { }} className="flex flex-row gap-4 justify-between">
+          <form onSubmit={handleAddChars} className="flex flex-row gap-4 justify-between">
             <Input
               placeholder="Add a new fact"
-              className="w-full bg-transparent text-xl font-bold"
+              className="w-full bg-transparent text-base"
               value={newChars}
               onChange={(e) => setNewChars(e.target.value)}
             />
