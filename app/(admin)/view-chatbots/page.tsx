@@ -18,6 +18,8 @@ async function ViewChatbots() {
       variables: { clerk_user_id: userId },
     })
 
+  const chatbots = chatbotsByUserId.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
   return (
     <div className="flex-1 pb-20 p-10">
       <h1 className="text-xl lg:text-3xl font-semibold mb-5">Active Chatbots</h1>
@@ -33,7 +35,7 @@ async function ViewChatbots() {
         {chatbotsByUserId?.map((chatbot: Chatbot) => (
           <Link key={chatbot.id} href={`/edit-chat/${chatbot.id}`}>
             <li className="relative p-10 border rounded max-w-3xl bg-white">
-              <div>
+              <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                   <BotMessageSquare />
                   <h2 className="text-sl ">{chatbot.name}</h2>
@@ -53,6 +55,9 @@ async function ViewChatbots() {
                     </li>
                   ))}
                 </ul>
+
+                <h3 className="italic">№ of Sessions:</h3>
+                <p>{chatbot.chat_sessions.length}</p>
               </div>
             </li>
           </Link>
